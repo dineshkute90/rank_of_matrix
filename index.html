@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Rank Calculator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        
+        .description {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .matrix-input-section {
+            margin-bottom: 30px;
+        }
+        
+        .matrix-size-selector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .matrix-container {
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        
+        .matrix {
+            display: grid;
+            gap: 5px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .matrix input {
+            width: 70px;
+            height: 50px;
+            text-align: center;
+            font-size: 18px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            background-color: white;
+        }
+        
+        .matrix input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        #calculateBtn {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        #calculateBtn:hover {
+            background-color: #2980b9;
+        }
+        
+        #randomBtn {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        #randomBtn:hover {
+            background-color: #27ae60;
+        }
+        
+        #clearBtn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        #clearBtn:hover {
+            background-color: #c0392b;
+        }
+        
+        #exampleBtn {
+            background-color: #9b59b6;
+            color: white;
+        }
+        
+        #exampleBtn:hover {
+            background-color: #8e44ad;
+        }
+        
+        .results-section {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            display: none;
+        }
+        
+        .results-section.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .result-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .result-label {
+            font-weight: bold;
+            width: 150px;
+            color: #2c3e50;
+        }
+        
+        .result-value {
+            font-size: 18px;
+            padding: 8px 15px;
+            background-color: white;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            flex-grow: 1;
+        }
+        
+        .rank-value {
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 24px;
+        }
+        
+        .steps-container {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 15px;
+            background-color: white;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+        
+        .step {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .step:last-child {
+            border-bottom: none;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+        
+        .step-matrix {
+            font-family: monospace;
+            white-space: pre;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .matrix input {
+                width: 50px;
+                height: 40px;
+                font-size: 16px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Matrix Rank Calculator</h1>
+        <p class="subtitle">Calculate the rank of a matrix using Gaussian elimination</p>
+        
+        <div class="description">
+            <p>The <strong>rank</strong> of a matrix is the maximum number of linearly independent rows (or columns) in the matrix. It represents the dimension of the vector space generated by its rows or columns.</p>
+            <p>Enter your matrix values below and click "Calculate Rank" to find the rank of your matrix.</p>
+        </div>
+        
+        <div class="matrix-input-section">
+            <div class="matrix-size-selector">
+                <label for="rows">Rows:</label>
+                <input type="number" id="rows" min="1" max="6" value="3">
+                <label for="cols">Columns:</label>
+                <input type="number" id="cols" min="1" max="6" value="3">
+                <button id="updateSizeBtn">Update Matrix Size</button>
+            </div>
+            
+            <div class="matrix-container">
+                <div id="matrixInput" class="matrix"></div>
+            </div>
+            
+            <div class="controls">
+                <button id="calculateBtn">Calculate Rank</button>
+                <button id="randomBtn">Fill with Random Values</button>
+                <button id="exampleBtn">Load Example</button>
+                <button id="clearBtn">Clear Matrix</button>
+            </div>
+        </div>
+        
+        <div id="results" class="results-section">
+            <h2>Results</h2>
+            <div class="result-row">
+                <div class="result-label">Matrix Rank:</div>
+                <div class="result-value">
+                    <span id="rankResult" class="rank-value">0</span>
+                </div>
+            </div>
+            
+            <div class="result-row">
+                <div class="result-label">Matrix Size:</div>
+                <div class="result-value" id="matrixSize">0 × 0</div>
+            </div>
+            
+            <div id="stepsContainer" class="steps-container">
+                <h3>Calculation Steps</h3>
+                <div id="steps"></div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Matrix rank calculator using Gaussian elimination | Created with HTML, CSS & JavaScript</p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize matrix with default size
+        let rows = 3;
+        let cols = 3;
+        let matrix = [];
+        
+        // DOM elements
+        const rowsInput = document.getElementById('rows');
+        const colsInput = document.getElementById('cols');
+        const updateSizeBtn = document.getElementById('updateSizeBtn');
+        const matrixInput = document.getElementById('matrixInput');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const randomBtn = document.getElementById('randomBtn');
+        const exampleBtn = document.getElementById('exampleBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const resultsSection = document.getElementById('results');
+        const rankResult = document.getElementById('rankResult');
+        const matrixSize = document.getElementById('matrixSize');
+        const stepsContainer = document.getElementById('steps');
+        
+        // Initialize the matrix input
+        function initializeMatrix() {
+            rows = parseInt(rowsInput.value);
+            cols = parseInt(colsInput.value);
+            
+            // Limit matrix size for performance and UI
+            if (rows > 6) rows = 6;
+            if (cols > 6) cols = 6;
+            
+            rowsInput.value = rows;
+            colsInput.value = cols;
+            
+            // Generate empty matrix
+            matrix = [];
+            for (let i = 0; i < rows; i++) {
+                matrix[i] = [];
+                for (let j = 0; j < cols; j++) {
+                    matrix[i][j] = '';
+                }
+            }
+            
+            renderMatrix();
+        }
+        
+        // Render matrix input fields
+        function renderMatrix() {
+            matrixInput.innerHTML = '';
+            matrixInput.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+            
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.step = 'any';
+                    input.value = matrix[i][j];
+                    input.dataset.row = i;
+                    input.dataset.col = j;
+                    
+                    input.addEventListener('input', function() {
+                        const row = parseInt(this.dataset.row);
+                        const col = parseInt(this.dataset.col);
+                        matrix[row][col] = this.value === '' ? '' : parseFloat(this.value);
+                    });
+                    
+                    matrixInput.appendChild(input);
+                }
+            }
+        }
+        
+        // Get current matrix values from inputs
+        function getMatrixFromInputs() {
+            const result = [];
+            for (let i = 0; i < rows; i++) {
+                result[i] = [];
+                for (let j = 0; j < cols; j++) {
+                    const value = matrix[i][j];
+                    result[i][j] = value === '' ? 0 : parseFloat(value);
+                }
+            }
+            return result;
+        }
+        
+        // Calculate matrix rank using Gaussian elimination
+        function calculateRank(matrix) {
+            const steps = [];
+            let rank = 0;
+            const numRows = matrix.length;
+            const numCols = matrix[0].length;
+            
+            // Create a copy of the matrix to avoid modifying the original
+            let tempMatrix = matrix.map(row => [...row]);
+            
+            steps.push({
+                title: "Original Matrix",
+                matrix: matrixToString(tempMatrix)
+            });
+            
+            for (let row = 0; row < numRows; row++) {
+                // Find pivot (first non-zero element) in current row
+                let pivotCol = -1;
+                for (let col = rank; col < numCols; col++) {
+                    if (Math.abs(tempMatrix[row][col]) > 1e-10) {
+                        pivotCol = col;
+                        break;
+                    }
+                }
+                
+                // If no pivot found, this row is linearly dependent
+                if (pivotCol === -1) {
+                    continue;
+                }
+                
+                // Increment rank for this pivot
+                rank++;
+                
+                // Swap current row with the row at rank-1 if needed
+                if (row !== rank-1) {
+                    [tempMatrix[row], tempMatrix[rank-1]] = [tempMatrix[rank-1], tempMatrix[row]];
+                    steps.push({
+                        title: `Swap row ${row+1} with row ${rank}`,
+                        matrix: matrixToString(tempMatrix)
+                    });
+                    row = rank-1; // Adjust row index after swap
+                }
+                
+                // Normalize the pivot row
+                const pivotValue = tempMatrix[row][pivotCol];
+                if (Math.abs(pivotValue - 1) > 1e-10) {
+                    for (let col = 0; col < numCols; col++) {
+                        tempMatrix[row][col] /= pivotValue;
+                    }
+                    steps.push({
+                        title: `Normalize row ${row+1} by dividing by ${pivotValue.toFixed(4)}`,
+                        matrix: matrixToString(tempMatrix)
+                    });
+                }
+                
+                // Eliminate other rows
+                for (let i = 0; i < numRows; i++) {
+                    if (i !== row && Math.abs(tempMatrix[i][pivotCol]) > 1e-10) {
+                        const factor = tempMatrix[i][pivotCol];
+                        for (let j = 0; j < numCols; j++) {
+                            tempMatrix[i][j] -= factor * tempMatrix[row][j];
+                        }
+                        
+                        steps.push({
+                            title: `Row ${i+1} = Row ${i+1} - (${factor.toFixed(4)} × Row ${row+1})`,
+                            matrix: matrixToString(tempMatrix)
+                        });
+                    }
+                }
+                
+                // If we've reached max possible rank, break
+                if (rank >= Math.min(numRows, numCols)) {
+                    break;
+                }
+            }
+            
+            steps.push({
+                title: "Final Row-Echelon Form",
+                matrix: matrixToString(tempMatrix)
+            });
+            
+            return { rank, steps };
+        }
+        
+        // Convert matrix to string for display
+        function matrixToString(matrix) {
+            let result = '';
+            const numRows = matrix.length;
+            const numCols = matrix[0].length;
+            
+            for (let i = 0; i < numRows; i++) {
+                result += '[ ';
+                for (let j = 0; j < numCols; j++) {
+                    // Format number to avoid too many decimal places
+                    const value = matrix[i][j];
+                    if (Math.abs(value) < 1e-10) {
+                        result += '0 ';
+                    } else {
+                        result += value.toFixed(4) + ' ';
+                    }
+                }
+                result += ']\n';
+            }
+            
+            return result;
+        }
+        
+        // Display calculation steps
+        function displaySteps(steps) {
+            stepsContainer.innerHTML = '';
+            
+            steps.forEach((step, index) => {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = 'step';
+                
+                const title = document.createElement('div');
+                title.className = 'step-title';
+                title.textContent = `Step ${index + 1}: ${step.title}`;
+                
+                const matrix = document.createElement('pre');
+                matrix.className = 'step-matrix';
+                matrix.textContent = step.matrix;
+                
+                stepDiv.appendChild(title);
+                stepDiv.appendChild(matrix);
+                stepsContainer.appendChild(stepDiv);
+            });
+        }
+        
+        // Fill matrix with random values
+        function fillRandomMatrix() {
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    // Random integer between -5 and 5
+                    matrix[i][j] = Math.floor(Math.random() * 11) - 5;
+                }
+            }
+            renderMatrix();
+        }
+        
+        // Load example matrix
+        function loadExampleMatrix() {
+            // Example: A 3x3 matrix with rank 2
+            rows = 3;
+            cols = 3;
+            rowsInput.value = rows;
+            colsInput.value = cols;
+            
+            matrix = [
+                [1, 2, 3],
+                [2, 4, 6],  // This row is 2 times the first row
+                [1, 1, 1]
+            ];
+            
+            renderMatrix();
+        }
+        
+        // Clear matrix
+        function clearMatrix() {
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    matrix[i][j] = '';
+                }
+            }
+            renderMatrix();
+            resultsSection.classList.remove('show');
+        }
+        
+        // Event listeners
+        updateSizeBtn.addEventListener('click', initializeMatrix);
+        
+        calculateBtn.addEventListener('click', function() {
+            const currentMatrix = getMatrixFromInputs();
+            matrixSize.textContent = `${rows} × ${cols}`;
+            
+            const { rank, steps } = calculateRank(currentMatrix);
+            rankResult.textContent = rank;
+            
+            displaySteps(steps);
+            resultsSection.classList.add('show');
+            
+            // Scroll to results
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        randomBtn.addEventListener('click', fillRandomMatrix);
+        
+        exampleBtn.addEventListener('click', loadExampleMatrix);
+        
+        clearBtn.addEventListener('click', clearMatrix);
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMatrix();
+            loadExampleMatrix();
+        });
+    </script>
+</body>
+</html>
