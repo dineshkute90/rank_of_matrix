@@ -347,6 +347,19 @@
             color: #2c3e50;
         }
 
+        /* Debug styling - to help identify if image loads */
+        .debug-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 1000;
+        }
+
         /* Responsive Design */
         @media (max-width: 992px) {
             .main-content {
@@ -415,15 +428,22 @@
     </style>
 </head>
 <body>
+    <!-- Debug info - remove this in production -->
+    <div class="debug-info" id="debugInfo">
+        Checking image loading...
+    </div>
+
     <!-- Header -->
     <header>
         <div class="container header-container">
             <div class="logo-section">
                 <!-- PCOE Logo -->
                 <div class="pcce-logo-container">
-                    <img src=pccoe.png" 
+                    <!-- Using GitHub raw URL with fallback -->
+                    <img src="https://raw.githubusercontent.com/dineshkute90/virtual_lab_LAUC/main/pccoe.png" 
                          alt="PCOE Logo" 
                          class="pcce-logo-img"
+                         id="pcceLogo"
                          onerror="this.onerror=null; this.src='https://via.placeholder.com/60x60/2c3e50/ffffff?text=PCOE';">
                     <div class="pcce-logo-text">
                         <div class="main">PIMPRI CHINCHWAD</div>
@@ -571,6 +591,35 @@
     </footer>
 
     <script>
+        // Debug image loading
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoImg = document.getElementById('pcceLogo');
+            const debugInfo = document.getElementById('debugInfo');
+            
+            logoImg.onload = function() {
+                debugInfo.innerHTML = '✓ PCOE logo loaded successfully';
+                debugInfo.style.background = 'rgba(46, 204, 113, 0.8)';
+                setTimeout(() => {
+                    debugInfo.style.display = 'none';
+                }, 3000);
+            };
+            
+            logoImg.onerror = function() {
+                debugInfo.innerHTML = '✗ PCOE logo failed to load, using fallback';
+                debugInfo.style.background = 'rgba(231, 76, 60, 0.8)';
+                setTimeout(() => {
+                    debugInfo.style.display = 'none';
+                }, 5000);
+            };
+            
+            // Check after 2 seconds if image loaded
+            setTimeout(() => {
+                if (!logoImg.complete || logoImg.naturalHeight === 0) {
+                    debugInfo.innerHTML = '⚠️ PCOE logo loading slowly...';
+                }
+            }, 2000);
+        });
+
         // Navigation menu interaction
         const navItems = document.querySelectorAll('.nav-item');
         navItems.forEach(item => {
