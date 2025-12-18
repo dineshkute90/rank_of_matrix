@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Virtual Labs - Chemical Engineering</title>
+    <title>Virtual Labs - LAUC</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -39,23 +39,66 @@
             align-items: center;
         }
 
-        .logo {
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .pcce-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-right: 25px;
+            border-right: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .pcce-logo-img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border-radius: 8px;
+            background-color: white;
+            padding: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .pcce-logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pcce-logo-text .main {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        .pcce-logo-text .sub {
+            font-size: 12px;
+            color: #ecf0f1;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        .virtual-labs-logo {
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
-        .logo i {
-            font-size: 28px;
+        .virtual-labs-logo i {
+            font-size: 32px;
             color: #3498db;
         }
 
-        .logo h1 {
-            font-size: 24px;
+        .virtual-labs-logo h1 {
+            font-size: 26px;
             font-weight: 600;
         }
 
-        .logo span {
+        .virtual-labs-logo span {
             color: #3498db;
         }
 
@@ -297,6 +340,13 @@
             border-top: 1px solid #eee;
         }
 
+        .footer-logo {
+            display: inline-block;
+            margin: 0 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
         /* Responsive Design */
         @media (max-width: 992px) {
             .main-content {
@@ -315,7 +365,27 @@
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
-                gap: 15px;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .logo-section {
+                flex-direction: column;
+                gap: 20px;
+                width: 100%;
+            }
+            
+            .pcce-logo-container {
+                border-right: none;
+                padding-right: 0;
+                border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+                padding-bottom: 20px;
+                justify-content: center;
+                width: 100%;
+            }
+            
+            .virtual-labs-logo {
+                justify-content: center;
             }
             
             .aim-sections {
@@ -331,6 +401,16 @@
             .content {
                 padding: 20px;
             }
+            
+            .pcce-logo-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .pcce-logo-img {
+                width: 70px;
+                height: 70px;
+            }
         }
     </style>
 </head>
@@ -338,10 +418,26 @@
     <!-- Header -->
     <header>
         <div class="container header-container">
-            <div class="logo">
-                <i class="fas fa-flask"></i>
-                <h1>Virtual <span>Labs</span></h1>
+            <div class="logo-section">
+                <!-- PCOE Logo -->
+                <div class="pcce-logo-container">
+                    <img src="https://raw.githubusercontent.com/your-username/your-repository/main/pccoe-logo.png" 
+                         alt="PCOE Logo" 
+                         class="pcce-logo-img"
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/60x60/2c3e50/ffffff?text=PCOE';">
+                    <div class="pcce-logo-text">
+                        <div class="main">PIMPRI CHINCHWAD</div>
+                        <div class="sub">COLLEGE OF ENGINEERING</div>
+                    </div>
+                </div>
+                
+                <!-- Virtual Labs Logo -->
+                <div class="virtual-labs-logo">
+                    <i class="fas fa-flask"></i>
+                    <h1>Virtual <span>Labs</span></h1>
+                </div>
             </div>
+            
             <div class="user-info">
                 <i class="fas fa-user-circle"></i>
                 <span>Welcome, Student</span>
@@ -469,7 +565,9 @@
 
     <!-- Footer -->
     <footer class="container">
-        <p>Virtual Labs &copy; 2023 | Chemical Engineering Department</p>
+        <p>Virtual Labs &copy; 2023 | Chemical Engineering Department | 
+           <span class="footer-logo">Pimpri Chinchwad College of Engineering</span>
+        </p>
     </footer>
 
     <script>
@@ -502,7 +600,6 @@
         });
 
         // Simulate active section based on URL or user interaction
-        // For demo purposes, we'll set the first section as active by default
         document.addEventListener('DOMContentLoaded', () => {
             // Highlight the first section card
             sectionCards[0].classList.add('active');
